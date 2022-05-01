@@ -1,7 +1,4 @@
-
 def novo_ponto(x, y, direcao):
-    # print("novoPonto   x: {} - y:{} - direcao: {}".format(x, y, direcao))
-
     if direcao == 'N':
         return x, y + 1
     if direcao == 'S':
@@ -13,9 +10,8 @@ def novo_ponto(x, y, direcao):
 
 
 def calcula_movimento(inicio, percurso):
-    # print("Inicio: {} - Percurso: {}".format(inicio, percurso))
-    pos_x = inicio[0]
-    pos_y = inicio[1]
+    pos_x = int(inicio[0])
+    pos_y = int(inicio[1])
     direcao = inicio[2]
 
     for p in percurso:
@@ -39,20 +35,35 @@ def calcula_movimento(inicio, percurso):
             resp = novo_ponto(pos_x, pos_y, direcao)
             pos_x = resp[0]
             pos_y = resp[1]
-            # print("resp: {}".format(resp))
-        # print("calculaMovimento  x: {} - y:{} - direcao: {}".format(posX, posY, direcao))
-    return [pos_x, pos_y, direcao]
-    # print("Posicao Final  x:{} - y:{} - direcao:{}".format(posX, posY, direcao))
+    return [str(pos_x), str(pos_y), direcao]
 
 
-areaPlanalto = [5, 5]
-sonda1PosInicial = [1, 2, "N"]
-sonda1Movimentacao = ["L", "M", "L", "M", "L", "M", "L", "M", "M"]
-sonda2PosInicial = [3, 3, "E"]
-sonda2Movimentacao = ["M", "M", "R", "M", "M", "R", "M", "R", "R", "M"]
+def menu():
+    continua = True
+    pos_inicial = input('entre com a posicao inicial das sondas: ')
+    i = 0
+    sondas = []
+    while continua:
+        sonda_pos_inicial = input('sonda {} posicao inicial: '.format(i + 1))
+        sonda_movimentacao = input('sonda {} movimentacao: '.format(i + 1))
+        resp = input('adicionar dados de mais uma sonda [S/N] ?')
+        sondas.append((sonda_pos_inicial, sonda_movimentacao))
+        i += 1
+        if resp.upper() == 'N':
+            break
+
+    return pos_inicial, sondas
+
+def processa_movimentos(movimentos):
+    pos_inicial = movimentos[0].split(' ')
+    sondas = movimentos[1]
+    for s in sondas:
+        movs = list(s[1].strip())
+        resp = calcula_movimento(s[0].split(' '), movs)
+        print(' '.join(resp))
+
 
 if __name__ == '__main__':
-    print("sonda 1:")
-    print(calcula_movimento(sonda1PosInicial, sonda1Movimentacao))
-    print("sonda 2:")
-    print(calcula_movimento(sonda2PosInicial, sonda2Movimentacao))
+    movimentos = menu()
+    processa_movimentos(movimentos)
+
